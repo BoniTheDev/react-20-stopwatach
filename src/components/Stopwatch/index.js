@@ -6,22 +6,27 @@ import './index.css'
 class Stopwatch extends Component {
   state = {
     setTimeOfWatchinSeconds: 0,
+    isTimerRunning: false,
   }
 
-  clearTimerInterval = () => clearInterval(this.intervalId)
+  componentWillUnmount() {
+    clearInterval(this.intervalId)
+  }
 
   onClickResetTheClock = () => {
-    this.clearTimerInterval()
+    clearInterval(this.intervalId)
 
-    this.setState({setTimeOfWatchinSeconds: 0})
+    this.setState({isTimerRunning: false, setTimeOfWatchinSeconds: 0})
   }
 
   onClickStopTheClock = () => {
-    this.clearTimerInterval()
+    clearInterval(this.intervalId)
+    this.setState({isTimerRunning: false})
   }
 
   onClickStartTheClock = () => {
     this.intervalId = setInterval(this.increaseTheStopWatch, 1000)
+    this.setState({isTimerRunning: true})
   }
 
   increaseTheStopWatch = () => {
@@ -45,6 +50,7 @@ class Stopwatch extends Component {
   }
 
   render() {
+    const {isTimerRunning} = this.state
     return (
       <div className="app-container">
         <h1 className="heading">StopWatch</h1>
@@ -66,6 +72,7 @@ class Stopwatch extends Component {
               type="button"
               className="start-button"
               onClick={this.onClickStartTheClock}
+              disabled={isTimerRunning}
             >
               Start
             </button>
